@@ -1,6 +1,12 @@
 <?php
+
+function cmp($a, $b) {
+    global $baseSort;
+    return ($baseSort[$a] < $baseSort[$b]) ? -1 : 1;
+}
+
 $data = array();
-$headerDone = false;
+$headerDone = $baseSort = false;
 foreach (glob(dirname(__DIR__) . '/city_diff/*/*.csv') AS $csvFile) {
     $pathParts = explode('/', $csvFile);
     $month = substr(array_pop($pathParts), 0, -4);
@@ -23,6 +29,12 @@ foreach (glob(dirname(__DIR__) . '/city_diff/*/*.csv') AS $csvFile) {
             );
         }
         $data[$key][$line[2]] = $line[4];
+    }
+    if (false === $baseSort) {
+        $baseSort = array_keys($data[$key]);
+        $baseSort = array_combine(array_values($baseSort), array_keys($baseSort));
+    } else {
+        uksort($data[$key], 'cmp');
     }
     $headerDone = true;
 }
