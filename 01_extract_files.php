@@ -6,7 +6,7 @@ if (!file_exists($tmpPath)) {
 }
 
 $za = new ZipArchive();
-$za->open($tmpPath . '/20150201213848670.zip');
+$za->open($tmpPath . '/20150526143758836.zip');
 
 for ($i = 0; $i < $za->numFiles; $i++) {
     $info = $za->statIndex($i);
