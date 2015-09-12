@@ -1,10 +1,5 @@
 <?php
 
-$target = array(
-    'year' => '2015',
-    'month' => '07',
-);
-
 $fh = fopen(__DIR__ . '/cunli_code.csv', 'r');
 /*
  * Array
@@ -46,7 +41,7 @@ $replaces = array(
 
 $stack = array();
 
-foreach (glob(__DIR__ . "/村里戶數人口數單一年齡人口數/{$target['year']}/{$target['month']}/*.csv") AS $csvFile) {
+foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv') AS $csvFile) {
     $csvFh = fopen($csvFile, 'r');
     $header = fgetcsv($csvFh, 4096);
     while ($line = fgetcsv($csvFh, 4096)) {
