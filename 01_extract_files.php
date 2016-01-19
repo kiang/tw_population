@@ -6,14 +6,19 @@ if (!file_exists($tmpPath)) {
 }
 
 $za = new ZipArchive();
-$za->open($tmpPath . '/20150902001141094.zip');
+$za->open($tmpPath . '/20160119155745027.zip');
 
 for ($i = 0; $i < $za->numFiles; $i++) {
     $info = $za->statIndex($i);
-    $pInfo = pathinfo(mb_convert_encoding($info['name'], 'utf8', 'big5'));
+    $pInfo = pathinfo($info['name']);
     $dashPos = strrpos($pInfo['filename'], '-');
     if (false !== $dashPos) {
-        $category = substr($pInfo['filename'], 0, $dashPos);
+        if ($info['size'] > 1000000) {
+            $category = '村里戶數人口數單一年齡人口數';
+        } else {
+            $category = '村里生死結離資料';
+        }
+
         $year = substr($pInfo['filename'], $dashPos + 1, 3) + 1911;
         $month = substr($pInfo['filename'], $dashPos + 4, 2);
         $dataPath = __DIR__ . "/{$category}/{$year}/{$month}";
