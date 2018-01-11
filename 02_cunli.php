@@ -174,6 +174,11 @@ $stack = array(
     '澎湖縣湖西鄉?葉村' => '10016020-022',
     '嘉義市西區磚??里' => '10020020-018',
     '連江縣北竿鄉?里村' => '09007020-005',
+    '雲林縣臺西鄉台西村' => '10009160-001',
+    '雲林縣口湖鄉台子村' => '10009190-014',
+    '高雄市左營區復興里' => '64000300-014',
+    '高雄市鳳山區海風里' => '64000120-023',
+    '高雄市鳳山區誠正里' => '64000120-052',
 );
 
 $fhPool = array();
@@ -189,48 +194,69 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
       $hasSiteId = true;
     }
     while ($line = fgetcsv($csvFh, 4096)) {
-      if (strlen($line[0]) === 5) {
-        /*
-         * Array
-          (
-          [0] => 10304
-          [1] => 連江縣南竿鄉
-          [2] => 仁愛村
-         */
-        $year = substr($line[0], 0, 3) + 1911;
-        $month = substr($line[0], 3);
-        if($hasSiteId) {
-          //[1] => 65000010 001 => 09007010-005
-          $cunliCode = substr($line[1], 0, 8) . '-' . substr($line[1], 8, 3);
-        } else {
-          if (false !== strpos($line[1], '桃園縣')) {
-              $line[1] = mb_substr($line[1], 0, 2, 'utf-8') . '市' . mb_substr($line[1], 3, -1, 'utf-8') . '區';
-              $line[2] = mb_substr($line[2], 0, -1, 'utf-8') . '里';
-          } else {
-              $line[1] = strtr($line[1], $replaces);
-          }
-
-          if (isset($codes[$line[1] . $line[2]])) {
-              $cunliCode = $codes[$line[1] . $line[2]];
-          } elseif (isset($stack["{$line[1]}{$line[2]}"])) {
-              $cunliCode = $stack["{$line[1]}{$line[2]}"];
-          } else {
-              if (!isset($missingPool["{$line[1]}{$line[2]}"])) {
-                  $missingPool["{$line[1]}{$line[2]}"] = true;
-                  echo "'{$line[1]}{$line[2]}' => '',\n";
-              }
-          }
-        }
-      } else {
+      if (strlen($line[0]) !== 5) {
         print_r($line);
         exit();
+      }
+      /*
+       * Array
+        (
+        [0] => 10304
+        [1] => 連江縣南竿鄉
+        [2] => 仁愛村
+       */
+      $year = substr($line[0], 0, 3) + 1911;
+      $month = substr($line[0], 3);
+      $targetFile = __DIR__ . "/cunli/{$year}/{$month}.csv";
+      if(file_exists($targetFile)) {
+        //continue;
+      }
+      if($hasSiteId) {
+        //[1] => 65000010001 => 65000010-001
+        $areaPart = substr($line[1], 0, 8);
+        switch($areaPart) {
+          case '64000121':
+          case '64000122':
+            $areaPart = '64000120';
+          break;
+          case '64000051':
+          case '64000052':
+            $areaPart = '64000050';
+          break;
+        }
+        $cunliCode = $areaPart . '-' . substr($line[1], 8, 3);
+        if(!in_array($cunliCode, $codes)) {
+          print_r(array(
+            'code' => $cunliCode,
+            'area' => $line[2],
+            'cunli' => $line[3],
+          ));
+        }
+      } else {
+        if (false !== strpos($line[1], '桃園縣')) {
+            $line[1] = mb_substr($line[1], 0, 2, 'utf-8') . '市' . mb_substr($line[1], 3, -1, 'utf-8') . '區';
+            $line[2] = mb_substr($line[2], 0, -1, 'utf-8') . '里';
+        } else {
+            $line[1] = strtr($line[1], $replaces);
+        }
+
+        if (isset($codes[$line[1] . $line[2]])) {
+            $cunliCode = $codes[$line[1] . $line[2]];
+        } elseif (isset($stack["{$line[1]}{$line[2]}"])) {
+            $cunliCode = $stack["{$line[1]}{$line[2]}"];
+        } else {
+            if (!isset($missingPool["{$line[1]}{$line[2]}"])) {
+                $missingPool["{$line[1]}{$line[2]}"] = true;
+                echo "'{$line[1]}{$line[2]}' => '',\n";
+            }
+        }
       }
       $ym = "{$year}-{$month}";
       if (!isset($fhPool[$ym])) {
         if (!file_exists(__DIR__ . "/cunli/{$year}")) {
             mkdir(__DIR__ . "/cunli/{$year}", 0777, true);
         }
-        $fhPool[$ym] = fopen(__DIR__ . "/cunli/{$year}/{$month}.csv", 'w');
+        $fhPool[$ym] = fopen($targetFile, 'w');
         fputcsv($fhPool[$ym], array(
             'ym' => '年月',
             'code' => '村里代碼',
