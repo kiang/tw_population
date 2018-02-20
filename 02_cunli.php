@@ -332,7 +332,7 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
           } elseif ($k < 37) {
             // < 15
             $dataLine['<15'] += $v;
-          } elseif ($k < 139) {
+          } elseif ($k < 137) {
             // 15 ~ 64
             $dataLine['15-64'] += $v;
           } else {
