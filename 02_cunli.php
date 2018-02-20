@@ -225,13 +225,13 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
           break;
         }
         $cunliCode = $areaPart . '-' . substr($line[1], 8, 3);
-        if(!in_array($cunliCode, $codes)) {
-          print_r(array(
-            'code' => $cunliCode,
-            'area' => $line[2],
-            'cunli' => $line[3],
-          ));
-        }
+        // if(!in_array($cunliCode, $codes)) {
+        //   print_r(array(
+        //     'code' => $cunliCode,
+        //     'area' => $line[2],
+        //     'cunli' => $line[3],
+        //   ));
+        // }
       } else {
         if (false !== strpos($line[1], '桃園縣')) {
             $line[1] = mb_substr($line[1], 0, 2, 'utf-8') . '市' . mb_substr($line[1], 3, -1, 'utf-8') . '區';
@@ -251,6 +251,7 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
             }
         }
       }
+      $line[2] = strtr($line[2], $replaces);
       $ym = "{$year}-{$month}";
       if (!isset($fhPool[$ym])) {
         if (!file_exists(__DIR__ . "/cunli/{$year}")) {
@@ -267,8 +268,8 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
             'm' => '男性人口',
             'f' => '女性人口',
             '<15' => '未滿15歲',
-            '15-65' => '15-65歲',
-            '>65' => '超過65歲',
+            '15-64' => '15-64歲',
+            '>64' => '超過64歲',
             '>20' => '超過20歲',
             '18-19' => '18-19歲',
         ));
@@ -284,8 +285,8 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
           'm' => $line[6],
           'f' => $line[7],
           '<15' => 0,
-          '15-65' => 0,
-          '>65' => 0,
+          '15-64' => 0,
+          '>64' => 0,
           '>20' => 0,
           '18-19' => 0,
         );
@@ -295,12 +296,12 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
           } elseif ($k < 38) {
             // < 15
             $dataLine['<15'] += $v;
-          } elseif ($k < 140) {
-            // 15 ~ 65
-            $dataLine['15-65'] += $v;
+          } elseif ($k < 138) {
+            // 15 ~ 64
+            $dataLine['15-64'] += $v;
           } else {
-            // > 65
-            $dataLine['>65'] += $v;
+            // > 64
+            $dataLine['>64'] += $v;
           }
           if (in_array($k, array(44, 45, 46, 47))) {
             $dataLine['18-19'] += $v;
@@ -320,8 +321,8 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
           'm' => $line[5],
           'f' => $line[6],
           '<15' => 0,
-          '15-65' => 0,
-          '>65' => 0,
+          '15-64' => 0,
+          '>64' => 0,
           '>20' => 0,
           '18-19' => 0,
         );
@@ -332,11 +333,11 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
             // < 15
             $dataLine['<15'] += $v;
           } elseif ($k < 139) {
-            // 15 ~ 65
-            $dataLine['15-65'] += $v;
+            // 15 ~ 64
+            $dataLine['15-64'] += $v;
           } else {
-            // > 65
-            $dataLine['>65'] += $v;
+            // > 64
+            $dataLine['>64'] += $v;
           }
           if (in_array($k, array(43, 44, 45, 46))) {
             $dataLine['18-19'] += $v;
