@@ -18,10 +18,17 @@ while(false !== $pos) {
     fputs($fh, $link);
     $logs .= $link . "\n";
     $content = shell_exec("curl '{$link}' -H 'Host: data.moi.gov.tw' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1'");
+    $firstCheck = strpos($content, 'https://data.moi.gov.tw/');
+    if(false !== $firstCheck) {
+      $firstCheckEnd = strpos($content, '"', $firstCheck);
+      $link = substr($content, $firstCheck, $firstCheckEnd - $firstCheck);
+      $content = shell_exec("curl '{$link}' -H 'Host: data.moi.gov.tw' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1'");
+    }
     $cPos = strpos($content, "\n");
     $cPos = strpos($content, "\n", $cPos + 1);
     $y = intval(substr($content, $cPos+1, 3)) + 1911;
     if($y < 2000) {
+      echo $content;
       die('something wrong');
     }
     $m = substr($content, $cPos + 4, 2);
