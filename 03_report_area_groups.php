@@ -7,7 +7,7 @@ foreach(glob(__DIR__ . '/reports/area/*/*.csv') AS $csvFile) {
         mkdir($p['dirname'], 0777, true);
     }
     $oFh = fopen($targetFile, 'w');
-    fputcsv($oFh, array('year', 'age range', 'male', 'female', 'total'));
+    fputcsv($oFh, array('year', 'age_range', 'male', 'female', 'total'));
     $fh = fopen($csvFile, 'r');
     $header = fgetcsv($fh, 8000);
     $areaResult = array();
