@@ -1,7 +1,7 @@
 <?php
 
-foreach(glob(__DIR__ . '/reports/area/*/*.csv') AS $csvFile) {
-    $targetFile = str_replace('/area/', '/area_group/', $csvFile);
+foreach(glob(__DIR__ . '/reports/city/*/*.csv') AS $csvFile) {
+    $targetFile = str_replace('/city/', '/city_group/', $csvFile);
     $p = pathinfo($targetFile);
     if(!file_exists($p['dirname'])) {
         mkdir($p['dirname'], 0777, true);
@@ -12,13 +12,13 @@ foreach(glob(__DIR__ . '/reports/area/*/*.csv') AS $csvFile) {
     fputcsv($oFh, array('year', 'age_range', 'male', 'female', 'total'));
     $fh = fopen($csvFile, 'r');
     $header = fgetcsv($fh, 8000);
-    $areaResult = array();
+    $cityResult = array();
     while($line = fgetcsv($fh, 8000)) {
         $data = array_combine($header, $line);
         foreach($data AS $key => $val) {
             if($key === 'year') {
                 $currentYear = $val;
-                $areaResult[$currentYear] = array();
+                $cityResult[$currentYear] = array();
             } else {
                 $gender = substr($key, -1);
                 $age = substr($key, 0, -1);
@@ -28,19 +28,19 @@ foreach(glob(__DIR__ . '/reports/area/*/*.csv') AS $csvFile) {
                 } else {
                     $ageRange = '100+';
                 }
-                if(!isset($areaResult[$currentYear][$ageRange])) {
-                    $areaResult[$currentYear][$ageRange] = array(
+                if(!isset($cityResult[$currentYear][$ageRange])) {
+                    $cityResult[$currentYear][$ageRange] = array(
                         'm' => 0,
                         'f' => 0,
                         'total' => 0,
                     );
                 }
-                $areaResult[$currentYear][$ageRange][$gender] += $val;
-                $areaResult[$currentYear][$ageRange]['total'] += $val;
+                $cityResult[$currentYear][$ageRange][$gender] += $val;
+                $cityResult[$currentYear][$ageRange]['total'] += $val;
             }
         }
     }
-    foreach($areaResult AS $year => $col1) {
+    foreach($cityResult AS $year => $col1) {
         $male = $female = $total = 0;
         foreach($col1 AS $ageRange => $col2) {
             $male += $col2['m'];
