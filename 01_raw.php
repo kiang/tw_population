@@ -2,7 +2,7 @@
 //http://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=F7E9A1B3-3985-434A-9195-4EB940400D59
 // old: https://data.gov.tw/dataset/32973
 $page = file_get_contents('https://data.gov.tw/dataset/77132');
-$key = 'http://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=';
+$key = 'https://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=';
 $logFile = __DIR__ . '/raw.log';
 $logs = '';
 if(file_exists($logFile)) {
