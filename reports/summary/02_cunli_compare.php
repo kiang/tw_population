@@ -31,7 +31,7 @@ for ($y = 2019; $y <= 2021; $y++) {
         for($i = 8; $i <= 33; $i++) {
             $result[$cunli]['children'][$y] += $line[$i];
         }
-        for($i = 38; $i <= 129; $i++) {
+        for($i = 38; $i <= 137; $i++) {
             $result[$cunli]['adult'][$y] += $line[$i];
         }
     }
