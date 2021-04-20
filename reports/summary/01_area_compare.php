@@ -1,5 +1,5 @@
 <?php
-$basePath = dirname(__DIR__);
+$basePath = dirname(dirname(__DIR__));
 $result = [];
 for ($y = 2018; $y <= 2021; $y++) {
     $fh = fopen($basePath . "/population/{$y}/03/data.csv", 'r');
