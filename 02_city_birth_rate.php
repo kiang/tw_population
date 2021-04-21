@@ -1,6 +1,8 @@
 <?php
 
-$result = [];
+$result = [
+    '全國' => [],
+];
 $replaces = array(
     ' ' => '',
     '　' => '',
@@ -37,6 +39,31 @@ foreach(glob(__DIR__ . '/bdmd/*/*/data.csv') AS $bdmdFile) {
         }
         $result[$data['區域別']][$y]['birth'] += $data['出生數'];
         $result[$data['區域別']][$y]['death'] += $data['死亡數'];
+
+        $city = mb_substr($data['區域別'], 0, 3, 'utf-8');
+        if(!isset($result[$city])) {
+            $result[$city] = [];
+        }
+        if(!isset($result[$city][$y])) {
+            $result[$city][$y] = [
+                'birth' => 0,
+                'death' => 0,
+                'population' => 0,
+            ];
+        }
+        $result[$city][$y]['birth'] += $data['出生數'];
+        $result[$city][$y]['death'] += $data['死亡數'];
+
+        $city = '全國';
+        if(!isset($result[$city][$y])) {
+            $result[$city][$y] = [
+                'birth' => 0,
+                'death' => 0,
+                'population' => 0,
+            ];
+        }
+        $result[$city][$y]['birth'] += $data['出生數'];
+        $result[$city][$y]['death'] += $data['死亡數'];
     }
 }
 
@@ -51,6 +78,10 @@ foreach(glob(__DIR__ . '/cunli/*/06.csv') AS $csvFile) {
         }
         $data['區域'] = strtr($data['區域'], $replaces);
         $result[$data['區域']][$y]['population'] += $data['人口'];
+        $city = mb_substr($data['區域'], 0, 3, 'utf-8');
+        $result[$city][$y]['population'] += $data['人口'];
+        $city = '全國';
+        $result[$city][$y]['population'] += $data['人口'];
     }
 }
 
