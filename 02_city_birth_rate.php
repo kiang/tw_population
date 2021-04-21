@@ -59,8 +59,17 @@ if(!file_exists($targetPath)) {
     mkdir($targetPath, 0777);
 }
 $oFh = [];
+$allFh = fopen($targetPath . '/all.csv', 'w');
 ksort($result);
+$headerDone = false;
 foreach($result AS $city => $lv1) {
+    ksort($lv1);
+    if(false === $headerDone) {
+        $headerDone = true;
+        $header = array_merge(['區域'], array_keys($lv1));
+        fputcsv($allFh, $header);
+    }
+    $line = [$city];
     foreach($lv1 AS $y => $data) {
         if(!isset($oFh[$y])) {
             $oFh[$y] = fopen($targetPath . '/' . $y . '.csv', 'w');
@@ -74,7 +83,9 @@ foreach($result AS $city => $lv1) {
             echo $city;
             print_r($data);
         }
+        $line[] = $birthRate;
         
         fputcsv($oFh[$y], [$city, $data['birth'], $data['death'], $data['population'], $birthRate, $deathRate]);
     }
+    fputcsv($allFh, $line);
 }
