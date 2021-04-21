@@ -1,6 +1,10 @@
 <?php
 //http://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=F7E9A1B3-3985-434A-9195-4EB940400D59
 // old: https://data.gov.tw/dataset/32973
+/*
+
+old: https://data.gov.tw/api/v2/rest/dataset/77140
+*/
 
 $json = json_decode(file_get_contents('https://data.gov.tw/api/v2/rest/dataset/131138'), true);
 foreach($json['result']['distribution'] AS $item) {
@@ -10,7 +14,7 @@ foreach($json['result']['distribution'] AS $item) {
     if($y > 2000) {
       $pos = strpos($item['resourceDescription'], '月');
       $m = substr($item['resourceDescription'], 3, 2);
-      $targetPath = __DIR__ . "/updates/{$y}/{$m}";
+      $targetPath = __DIR__ . "/bdmd/{$y}/{$m}";
       if (!file_exists($targetPath)) {
         mkdir($targetPath, 0777, true);
       }
