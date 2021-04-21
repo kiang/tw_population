@@ -183,7 +183,7 @@ $stack = array(
 
 $fhPool = array();
 $missingPool = array();
-foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv') AS $csvFile) {
+foreach (glob(__DIR__ . '/population/*/*/*.csv') AS $csvFile) {
     $csvFh = fopen($csvFile, 'r');
     $header = fgets($csvFh, 4096);
     if(false === strpos($header, '統計年月')) {
@@ -327,6 +327,7 @@ foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv')
           '18-19' => 0,
         );
         foreach ($line AS $k => $v) {
+          $v = intval($v);
           if ($k < 7) {
             continue;
           } elseif ($k < 37) {
