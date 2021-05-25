@@ -409,13 +409,13 @@ foreach (glob(__DIR__ . '/population/*/*/data.csv') as $csvFile) {
             $result[$code] = [
                 'area' => $data['區域別'],
                 'households' => $data['戶數'],
-                'pupulation' => $data['人口數'],
+                'population' => $data['人口數'],
                 'male' => $data['人口數-男'],
                 'female' => $data['人口數-女'],
             ];
         } else {
             $result[$code]['households'] += $data['戶數'];
-            $result[$code]['pupulation'] += $data['人口數'];
+            $result[$code]['population'] += $data['人口數'];
             $result[$code]['male'] += $data['人口數-男'];
             $result[$code]['female'] += $data['人口數-女'];
         }
