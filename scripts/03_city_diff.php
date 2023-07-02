@@ -1,4 +1,5 @@
 <?php
+$bastPath = dirname(__DIR__);
 
 $previous = false;
 $keyMap = array(
@@ -18,12 +19,12 @@ $keyMap = array(
     '桃園縣' => '桃園市',
 );
 
-foreach (glob(__DIR__ . '/city/*/*.csv') AS $csvFile) {
+foreach (glob($bastPath . '/city/*/*.csv') AS $csvFile) {
     $pathParts = explode('/', $csvFile);
     $month = substr(array_pop($pathParts), 0, -4);
     $year = array_pop($pathParts);
 
-    $targetPath = __DIR__ . "/city_diff/{$year}";
+    $targetPath = $bastPath . "/city_diff/{$year}";
     if (!file_exists($targetPath)) {
         mkdir($targetPath, 0777, true);
     }

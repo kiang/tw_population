@@ -1,6 +1,12 @@
 <?php
+$bastPath = dirname(__DIR__);
 
-$fh = fopen(__DIR__ . '/cunli_code.csv', 'r');
+$target = array(
+    'year' => '2015',
+    'month' => '11',
+);
+
+$fh = fopen($bastPath . '/cunli_code.csv', 'r');
 /*
  * Array
   (
@@ -37,11 +43,12 @@ $replaces = array(
     '高雄市三民二' => '高雄市三民區',
     '高雄市鳳山一' => '高雄市鳳山區',
     '高雄市鳳山二' => '高雄市鳳山區',
+    '苗栗縣頭份市' => '苗栗縣頭份鎮',
 );
 
 $stack = array();
 
-foreach (glob(__DIR__ . '/村里戶數人口數單一年齡人口數/*/*/*.csv') AS $csvFile) {
+foreach (glob($bastPath . "/docs/population/{$target['year']}/{$target['month']}/*.csv") AS $csvFile) {
     $csvFh = fopen($csvFile, 'r');
     $header = fgetcsv($csvFh, 4096);
     while ($line = fgetcsv($csvFh, 4096)) {
@@ -116,7 +123,7 @@ $header[2] = '區域';
 unset($header[209]);
 
 foreach ($stack AS $year => $yData) {
-    $targetPath = __DIR__ . "/city/{$year}";
+    $targetPath = $bastPath . "/docs/city/{$year}";
     if (!file_exists($targetPath)) {
         mkdir($targetPath, 0777, true);
     }

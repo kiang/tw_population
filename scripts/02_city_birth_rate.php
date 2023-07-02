@@ -1,5 +1,5 @@
 <?php
-
+$bastPath = dirname(__DIR__);
 $result = [
     '全國' => [],
 ];
@@ -13,7 +13,7 @@ $replaces = array(
     '苗栗縣頭份鎮' => '苗栗縣頭份市',
     '彰化縣員林鎮' => '彰化縣員林市',
 );
-foreach(glob(__DIR__ . '/bdmd/*/*/data.csv') AS $bdmdFile) {
+foreach(glob($bastPath . '/docs/bdmd/*/*/data.csv') AS $bdmdFile) {
     $fh = fopen($bdmdFile, 'r');
     $header = fgetcsv($fh, 2048);
     if(false === strpos($header[0], '統計年月')) {
@@ -67,7 +67,7 @@ foreach(glob(__DIR__ . '/bdmd/*/*/data.csv') AS $bdmdFile) {
     }
 }
 
-foreach(glob(__DIR__ . '/cunli/*/06.csv') AS $csvFile) {
+foreach(glob($bastPath . '/docs/cunli/*/06.csv') AS $csvFile) {
     $fh = fopen($csvFile, 'r');
     $header = fgetcsv($fh, 2048);
     while($line = fgetcsv($fh, 2048)) {
@@ -85,7 +85,7 @@ foreach(glob(__DIR__ . '/cunli/*/06.csv') AS $csvFile) {
     }
 }
 
-$targetPath = __DIR__ . '/city_birth_rate';
+$targetPath = $bastPath . '/docs/city_birth_rate';
 if(!file_exists($targetPath)) {
     mkdir($targetPath, 0777);
 }

@@ -1,4 +1,5 @@
 <?php
+$bastPath = dirname(__DIR__);
 $page = file_get_contents('https://data.gov.tw/dataset/18681');
 $key = 'http://data.moi.gov.tw/MoiOD/System/DownloadFile.aspx?DATA=';
 $key2 = 'https://segisws.moi.gov.tw/STATWSSTData/OpenService';
@@ -16,7 +17,7 @@ foreach($lines AS $line) {
     $pos = strpos($line, $key);
     $posEnd = strpos($line, '"', $pos);
     $link = substr($line, $pos, $posEnd - $pos);
-    $targetFile = __DIR__ . '/basecode/' . $title . '.json';
+    $targetFile = $bastPath . '/docs/basecode/' . $title . '.json';
     if(!file_exists($targetFile)) {
       $content = shell_exec("curl '{$link}' -H 'Host: data.moi.gov.tw' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1'");
       $pos = strpos($content, $key2);

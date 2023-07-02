@@ -7,6 +7,7 @@ https://data.gov.tw/api/v2/rest/dataset/77140
 old population:
 https://data.gov.tw/api/v2/rest/dataset/32973
 */
+$bastPath = dirname(__DIR__);
 
 $json = json_decode(file_get_contents('https://data.gov.tw/api/v2/rest/dataset/131138'), true);
 foreach($json['result']['distribution'] AS $item) {
@@ -16,7 +17,7 @@ foreach($json['result']['distribution'] AS $item) {
     if($y > 2000) {
       $pos = strpos($item['resourceDescription'], '月');
       $m = substr($item['resourceDescription'], 3, 2);
-      $targetPath = __DIR__ . "/bdmd/{$y}/{$m}";
+      $targetPath = "{$bastPath}/docs/bdmd/{$y}/{$m}";
       if (!file_exists($targetPath)) {
         mkdir($targetPath, 0777, true);
       }
@@ -45,33 +46,7 @@ foreach($json['result']['distribution'] AS $item) {
       } else {
         $m = substr($item['resourceDescription'], 3, 2);
       }
-      $targetPath = __DIR__ . "/population/{$y}/{$m}";
-      if (!file_exists($targetPath)) {
-        mkdir($targetPath, 0777, true);
-      }
-      $targetFile = $targetPath . '/data.csv';
-      if(!file_exists($targetFile)) {
-        $content = shell_exec("curl '{$item['resourceDownloadUrl']}' -H 'Host: data.moi.gov.tw' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1'");
-        if(!empty($content)) {
-          file_put_contents($targetFile, $content);
-        }
-      }
-    }
-  }
-}
-
-exit();
-
-// for old data
-$json = json_decode(file_get_contents('https://data.gov.tw/api/v2/rest/dataset/8411'), true);
-foreach($json['result']['distribution'] AS $item) {
-  if(false !== strpos($item['resourceDescription'], '人口統計月報表') && substr($item['resourceDescription'], 0, 1) === '1' && $item['resourceFormat'] === 'CSV') {
-    $item['resourceDescription'] = trim($item['resourceDescription']);
-    $y = intval(substr($item['resourceDescription'], 0, 3)) + 1911;
-    if($y > 2000) {
-      $pos = strpos($item['resourceDescription'], '月');
-      $m = substr($item['resourceDescription'], 3, 2);
-      $targetPath = __DIR__ . "/bdmd/{$y}/{$m}";
+      $targetPath = "{$bastPath}/docs/population/{$y}/{$m}";
       if (!file_exists($targetPath)) {
         mkdir($targetPath, 0777, true);
       }

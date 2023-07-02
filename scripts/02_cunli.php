@@ -1,6 +1,6 @@
 <?php
-
-$fh = fopen(__DIR__ . '/villages.csv', 'r');
+$bastPath = dirname(__DIR__);
+$fh = fopen($bastPath . '/villages.csv', 'r');
 /*
  * Array
   (
@@ -183,7 +183,7 @@ $stack = array(
 
 $fhPool = array();
 $missingPool = array();
-foreach (glob(__DIR__ . '/population/*/*/*.csv') AS $csvFile) {
+foreach (glob($bastPath . '/docs/population/*/*/*.csv') AS $csvFile) {
     $csvFh = fopen($csvFile, 'r');
     $header = fgets($csvFh, 4096);
     if(false === strpos($header, '統計年月')) {
@@ -207,7 +207,7 @@ foreach (glob(__DIR__ . '/population/*/*/*.csv') AS $csvFile) {
        */
       $year = substr($line[0], 0, 3) + 1911;
       $month = substr($line[0], 3);
-      $targetFile = __DIR__ . "/cunli/{$year}/{$month}.csv";
+      $targetFile = $bastPath . "/docs/cunli/{$year}/{$month}.csv";
       if(file_exists($targetFile)) {
         //continue;
       }
@@ -254,8 +254,8 @@ foreach (glob(__DIR__ . '/population/*/*/*.csv') AS $csvFile) {
       $line[2] = strtr($line[2], $replaces);
       $ym = "{$year}-{$month}";
       if (!isset($fhPool[$ym])) {
-        if (!file_exists(__DIR__ . "/cunli/{$year}")) {
-            mkdir(__DIR__ . "/cunli/{$year}", 0777, true);
+        if (!file_exists($bastPath . "/docs/cunli/{$year}")) {
+            mkdir($bastPath . "/docs/cunli/{$year}", 0777, true);
         }
         $fhPool[$ym] = fopen($targetFile, 'w');
         fputcsv($fhPool[$ym], array(

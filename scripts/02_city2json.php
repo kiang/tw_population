@@ -1,4 +1,5 @@
 <?php
+$bastPath = dirname(__DIR__);
 $codes = [
     '新北市板橋區' => '6500001',
     '新北市三重區' => '6500002',
@@ -373,7 +374,7 @@ $codes = [
     '連江縣莒光鄉' => '0900703',
     '連江縣東引鄉' => '0900704',
 ];
-foreach (glob(__DIR__ . '/population/*/*/data.csv') as $csvFile) {
+foreach (glob($bastPath . '/docs/population/*/*/data.csv') as $csvFile) {
     $fh = fopen($csvFile, 'r');
     $header = fgetcsv($fh, 4096);
     if (false === strpos($header[0], '統計年月')) {
@@ -387,7 +388,7 @@ foreach (glob(__DIR__ . '/population/*/*/data.csv') as $csvFile) {
         if (false === $y) {
             $y = intval(substr($data['統計年月'], 0, 3)) + 1911;
             $m = substr($data['統計年月'], 3);
-            $jsonPath = __DIR__ . '/json/city/' . $y;
+            $jsonPath = $bastPath . '/docs/json/city/' . $y;
             if (!file_exists($jsonPath)) {
                 mkdir($jsonPath, 0777, true);
             }
